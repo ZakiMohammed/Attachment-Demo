@@ -1,0 +1,88 @@
+<!-- header button -->
+<div class="mb-3">
+    <div class="float-right" *ngIf="fileUploads.length">
+        <button mat-button (click)="onDownloadAll($event)">
+            <mat-icon>get_app</mat-icon>
+            Download All
+        </button>
+        <button mat-button (click)="onDeleteAll($event)">
+            <mat-icon>delete</mat-icon>
+            Delete All
+        </button>
+    </div>
+    <button mat-button (click)="onUploadClick($event)">
+        <span class="text-upload">{{title}}</span>
+        <mat-icon>add</mat-icon>
+    </button>
+
+    <mat-divider></mat-divider>
+</div>
+
+<!-- file cards -->
+<mat-card class="mb-2" *ngFor="let fileUpload of fileUploads; let i = index;">
+
+    <!-- loader -->
+    <ng-container *ngIf="fileUpload.loading">
+        <mat-progress-spinner class="float-right mt-2" diameter="40" mode="determinate" [value]="fileUpload.progress">
+        </mat-progress-spinner>
+    </ng-container>
+
+    <!-- retry -->
+    <!-- <ng-container *ngIf="fileUpload.retry">
+        <button mat-button class="float-right" (click)="onRetryClick($event, fileUpload)">
+            <mat-icon>sync</mat-icon> Retry
+        </button>
+    </ng-container> -->
+
+    <!-- cancel -->
+    <ng-container *ngIf="fileUpload.cancel">
+        <button mat-button class="float-right mt-2" (click)="onCancelClick($event, i)">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </ng-container>
+
+    <!-- buttons -->
+    <div class="float-right mt-2" *ngIf="!fileUpload.loading && !fileUpload.retry">
+        <button mat-button (click)="onDownloadClick($event, i)">
+            <mat-icon>get_app</mat-icon>
+        </button>
+        <button mat-button (click)="onDeleteClick($event, i)">
+            <mat-icon>delete</mat-icon>
+        </button>
+    </div>
+
+    <!-- file details -->
+    <mat-card-header>
+
+        <!-- avatar -->
+        <div mat-card-avatar *ngIf="fileUpload.uploaded && isImage(fileUpload.name)">
+            <img [src]="fileUpload.link" class="img-avatar">
+        </div>
+        <div mat-card-avatar *ngIf="fileUpload.uploaded && !isImage(fileUpload.name)">
+            <mat-icon class="icon-avatar">insert_drive_file</mat-icon>
+        </div>
+        <div mat-card-avatar *ngIf="!fileUpload.uploaded">
+            <mat-icon class="icon-avatar" *ngIf="isImage(fileUpload.name)">photo</mat-icon>
+            <mat-icon class="icon-avatar" *ngIf="!isImage(fileUpload.name)">insert_drive_file</mat-icon>
+        </div>
+
+        <!-- name -->
+        <mat-card-subtitle class="mt-2 ml-2 text-subtitle">
+            <span [ngClass]="{ 'text-name': !fileUpload.loading && !fileUpload.retry }">{{fileUpload.name}}</span><br>
+            <span *ngIf="!fileUpload.retry" class="text-extension">{{getExtension(fileUpload.name)}}</span>
+            <span *ngIf="fileUpload.retry" class="text-error">
+                File could not be loaded. 
+                <span class="text-retry" (click)="onRetryClick($event, fileUpload)">Retry</span>
+            </span>            
+        </mat-card-subtitle>
+    </mat-card-header>
+
+</mat-card>
+
+<!-- no files -->
+<div class="m-5" *ngIf="!fileUploads.length">
+    <h5 class="text-muted text-center">No files uploaded</h5>
+</div>
+
+<!-- file control -->
+<input type="file" #fileUpload multiple="multiple" class="d-none" />

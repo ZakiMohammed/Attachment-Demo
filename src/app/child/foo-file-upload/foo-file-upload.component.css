@@ -1,0 +1,32 @@
+.text-upload {
+    font-weight: bold;
+    font-size: 18px;
+}
+.text-subtitle {
+    color: #222;
+}
+.text-name {
+    color: #007397;
+}
+.text-extension {
+    color: #959595;
+}
+.text-error {
+    color: #F54E42;
+}
+.text-retry {
+    color: #007397;
+    cursor: pointer;
+}
+.img-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 4px;
+}
+.icon-avatar {
+    color: #E0E0E0;
+    font-size: 50px;
+}
+.progress-spinner {
+    height: 50px;
+}

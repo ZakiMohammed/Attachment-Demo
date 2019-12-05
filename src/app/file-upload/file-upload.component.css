@@ -1,0 +1,15 @@
+.text-upload {
+    font-weight: bold;
+    font-size: 18px;
+}
+.img-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 4px;
+}
+.icon-avatar {
+    font-size: 50px;
+}
+.progress-spinner {
+    height: 50px;
+}

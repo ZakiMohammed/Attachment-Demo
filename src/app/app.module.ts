@@ -8,12 +8,19 @@ import { MaterialModule } from './modules/material/material.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MaterialFileUploadComponent } from './material-file-upload/material-file-upload.component';
+import { FileUploadComponent } from './file-upload/file-upload.component';
+import { DeleteDialogComponent } from './dialog/delete-dialog/delete-dialog.component';
+import { FooFileUploadComponent } from './child/foo-file-upload/foo-file-upload.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MaterialFileUploadComponent
+    MaterialFileUploadComponent,
+    FileUploadComponent,
+    DeleteDialogComponent,
+    FooFileUploadComponent
   ],
+  entryComponents: [DeleteDialogComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

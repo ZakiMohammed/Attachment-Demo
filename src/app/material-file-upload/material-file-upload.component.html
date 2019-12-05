@@ -1,21 +1,45 @@
+<!-- add -->
 <button mat-button (click)="onClick()" class="uploadAttachments">
     {{text}}
     <mat-icon>add</mat-icon>
 </button>
+
 <mat-divider></mat-divider>
-<br/>
+<br />
+
+
+<!-- file list -->
 <ul>
     <li *ngFor="let file of files" [@fadeInOut]="file.state">
-          <!-- <mat-progress-bar [value]="file.progress"></mat-progress-bar>  -->
-          <mat-progress-spinner [strokeWidth]="width" [diameter]="diameter" [value]="file.progress" [color] = "color" [mode] = "mode"></mat-progress-spinner>
-          <span id="file-label">
-          {{file.data.name}} 
-          <a title="Retry" (click)="retryFile(file)" *ngIf="file.canRetry">
-          <mat-icon>refresh</mat-icon></a>
-          <a title="Cancel" (click)="cancelFile(file)" *ngIf="file.canCancel">
-          <mat-icon>cancel</mat-icon></a>
-          </span> 
+
+        <!-- spinner -->
+        <mat-progress-spinner 
+            [strokeWidth]="width" 
+            [diameter]="diameter" 
+            [value]="file.progress" 
+            [color]="color"
+            [mode]="mode">
+        </mat-progress-spinner>
+
+        <!-- label -->
+        <span id="file-label">
+            {{file.data.name}}
+            <a title="Retry" (click)="retryFile(file)" *ngIf="file.canRetry">
+                <mat-icon>refresh</mat-icon>
+            </a>
+            <a title="Cancel" (click)="cancelFile(file)" *ngIf="file.canCancel">
+                <mat-icon>cancel</mat-icon>
+            </a>
+        </span>
+
     </li>
 </ul>
-<input type="file" id="fileUpload" name="fileUpload" multiple="multiple" 
-accept="{{accept}}" style="display:none;"/> 
+
+<!-- file control -->
+<input 
+    type="file" 
+    id="fileUpload" 
+    name="fileUpload" 
+    multiple="multiple" 
+    accept="{{accept}}" 
+    style="display:none;" />

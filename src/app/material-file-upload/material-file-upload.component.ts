@@ -1,15 +1,17 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { HttpClient, HttpResponse, HttpRequest, 
-         HttpEventType, HttpErrorResponse } from '@angular/common/http';
+import {
+      HttpClient, HttpResponse, HttpRequest,
+      HttpEventType, HttpErrorResponse
+} from '@angular/common/http';
 import { Subscription } from 'rxjs/Subscription';
 import { of } from 'rxjs/observable/of';
 import { catchError, last, map, tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-material-file-upload',
-  templateUrl: './material-file-upload.component.html',
-  styleUrls: ['./material-file-upload.component.css'],
+      selector: 'app-material-file-upload',
+      templateUrl: './material-file-upload.component.html',
+      styleUrls: ['./material-file-upload.component.css'],
       animations: [
             trigger('fadeInOut', [
                   state('in', style({ opacity: 100 })),
@@ -20,52 +22,58 @@ import { catchError, last, map, tap } from 'rxjs/operators';
       ]
 })
 export class MaterialFileUploadComponent implements OnInit {
-  /** Link text */
+      
+      /** Link text */
       @Input() text = 'Attachments';
       /** Name used in form which will be sent in HTTP request. */
       @Input() param = 'file';
       /** Target URL for file uploading. */
-      @Input() target = 'https://localhost:44365/api/file';
+      @Input() target = 'https://localhost:44365/apis/file';
       /** File extension that accepted, same as 'accept' of <input type="file" />. 
           By the default, it's set to 'image/*'. */
       @Input() accept = 'image/*';
       /** Allow you to add handler after its completion. Bubble up response text from remote. */
       @Output() complete = new EventEmitter<string>();
 
-      ProgressSpinnerMode = 'determinate' ;
+      ProgressSpinnerMode = 'determinate';
 
       color = 'primary';
       mode = 'determinate';
       width = 6;
       diameter = 30;
 
-
       private files: Array<FileUploadModel> = [];
 
       constructor(private _http: HttpClient) { }
 
       ngOnInit() {
-        const req = new HttpRequest('GET', this.target,  {
-          reportProgress: true
-      });
+            const req = new HttpRequest('GET', this.target, {
+                  reportProgress: true
+            });
 
-      this._http.get(this.target).subscribe((data:any)=>{
-        console.log("uploaded data"+data);
-      })
+            this._http.get(this.target).subscribe((data: any) => {
+                  console.log("uploaded data" + data);
+            })
 
       }
 
       onClick() {
-        const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
-        fileUpload.onchange = () => {
-              for (let index = 0; index < fileUpload.files.length; index++) {
-                    const file = fileUpload.files[index];
-                    this.files.push({ data: file, state: 'in', 
-                      inProgress: false, progress: 0, canRetry: false, canCancel: true });
-              }
-              this.uploadFiles();
-        };
-        fileUpload.click();
+            const fileUpload = document.getElementById('fileUpload') as HTMLInputElement;
+            fileUpload.onchange = () => {
+                  for (let index = 0; index < fileUpload.files.length; index++) {
+                        const file = fileUpload.files[index];
+                        this.files.push({
+                              data: file, 
+                              state: 'in',
+                              inProgress: false, 
+                              progress: 0, 
+                              canRetry: false, 
+                              canCancel: true
+                        });
+                  }
+                  this.uploadFiles();
+            };
+            fileUpload.click();
       }
 
       cancelFile(file: FileUploadModel) {
