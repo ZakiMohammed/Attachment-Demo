@@ -49,6 +49,7 @@ export class FooFileUploadComponent implements OnInit {
         response.files.forEach(file => {
           this.fileUploads.push({
             guid: this.getGuid(),
+            formData: null,
             file: null,
             link: file.url,
             uploaded: true,
@@ -75,18 +76,34 @@ export class FooFileUploadComponent implements OnInit {
           const formData = new FormData();
           formData.append('Upload', file);
 
-          this.fileUploads.push({
-            guid: this.getGuid(),
-            loading: true,
-            cancel: true,
-            retry: false,
-            uploaded: false,
-            progress: 0,
-            link: this.defaultImageUrl,
-            name: file.name,
-            file: formData,
-            subscription$: null
-          });
+          let found = this.fileUploads.find(i => i.name === file.name);
+          if (found) {
+             console.log(`😋 File "${found.name}" already exist`);
+          } else {
+            let newGuid = this.getGuid();
+            this.fileUploads.push({
+              guid: newGuid,
+              loading: true,
+              cancel: true,
+              retry: false,
+              uploaded: false,
+              progress: 0,
+              link: '',
+              name: file.name,
+              file: file,
+              formData: formData,
+              subscription$: null
+            });
+
+            let index = this.fileUploads.findIndex(i => i.guid === newGuid);
+            if (this.isImage(this.fileUploads[index].name)) {
+              const reader = new FileReader();          
+              reader.onloadend = (() => {
+                  this.fileUploads[index].link = <string>reader.result;
+              });
+              reader.readAsDataURL(this.fileUploads[index].file);
+            }
+          }
         }
       }
 
@@ -101,8 +118,8 @@ export class FooFileUploadComponent implements OnInit {
     this.fileUploadElement.nativeElement.click();
   }
 
-  onDeleteClick($event: any, index: number) {
-    this.currentIndex = index;
+  onDeleteClick($event: any, guid: number) {
+    this.currentIndex = this.fileUploads.findIndex(i => i.guid === guid);
 
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
       width: '500px',
@@ -145,8 +162,8 @@ export class FooFileUploadComponent implements OnInit {
     });
   }
 
-  onDownloadClick($event: any, index: number) {
-    let fileCard = this.fileUploads[index];
+  onDownloadClick($event: any, guid: number) {
+    let fileCard = this.fileUploads.find(i => i.guid === guid);
     this.forceDownload(fileCard.link, fileCard.name);
   }
 
@@ -169,10 +186,9 @@ export class FooFileUploadComponent implements OnInit {
     this.postFile(fileUpload);
   }
 
-  onCancelClick($event: any, index: number) {
+  onCancelClick($event: any, guid: number) {
+    let index = this.fileUploads.findIndex(i => i.guid === guid);
     this.fileUploads[index].subscription$.unsubscribe();
-    this.fileUploads[index].subscription$ = null;
-
     this.fileUploads.splice(index, 1);
 
   }
@@ -183,7 +199,7 @@ export class FooFileUploadComponent implements OnInit {
 
     let index = this.fileUploads.findIndex(i => i.guid === fileUpload.guid);
 
-    this.fileUploads[index].subscription$ = this.httpClient.post(this.url + 'UploadFile', fileUpload.file, {
+    this.fileUploads[index].subscription$ = this.httpClient.post(this.url + 'UploadFile', fileUpload.formData, {
       reportProgress: true,
       observe: 'events'
     }).subscribe((event: HttpEvent<any>) => {
@@ -272,10 +288,11 @@ export class FileUpload {
   retry: boolean;
   cancel: boolean;
   loading: boolean;
+  uploaded: boolean;
   progress: number;
   link: string;
-  uploaded: boolean;
   name: string;
+  formData: any;
   file: any;
   subscription$: Subscription;
 }

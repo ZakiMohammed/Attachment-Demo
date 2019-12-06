@@ -19,7 +19,7 @@
 </div>
 
 <!-- file cards -->
-<mat-card class="mb-2" *ngFor="let fileUpload of fileUploads; let i = index;">
+<mat-card class="mb-2" *ngFor="let fileUpload of fileUploads.slice().reverse(); let i = index;">
 
     <!-- loader -->
     <ng-container *ngIf="fileUpload.loading">
@@ -36,17 +36,17 @@
 
     <!-- cancel -->
     <ng-container *ngIf="fileUpload.cancel">
-        <button mat-button class="float-right mt-2" (click)="onCancelClick($event, i)">
+        <button mat-button class="float-right mt-2" (click)="onCancelClick($event, fileUpload.guid)">
             <mat-icon>clear</mat-icon>
         </button>
     </ng-container>
 
     <!-- buttons -->
     <div class="float-right mt-2" *ngIf="!fileUpload.loading && !fileUpload.retry">
-        <button mat-button (click)="onDownloadClick($event, i)">
+        <button mat-button (click)="onDownloadClick($event, fileUpload.guid)">
             <mat-icon>get_app</mat-icon>
         </button>
-        <button mat-button (click)="onDeleteClick($event, i)">
+        <button mat-button (click)="onDeleteClick($event, fileUpload.guid)">
             <mat-icon>delete</mat-icon>
         </button>
     </div>
@@ -62,7 +62,8 @@
             <mat-icon class="icon-avatar">insert_drive_file</mat-icon>
         </div>
         <div mat-card-avatar *ngIf="!fileUpload.uploaded">
-            <mat-icon class="icon-avatar" *ngIf="isImage(fileUpload.name)">photo</mat-icon>
+            <mat-icon class="icon-avatar" *ngIf="!fileUpload.link && isImage(fileUpload.name)">photo</mat-icon>
+            <img [src]="fileUpload.link" class="img-avatar" *ngIf="fileUpload.link">
             <mat-icon class="icon-avatar" *ngIf="!isImage(fileUpload.name)">insert_drive_file</mat-icon>
         </div>
 

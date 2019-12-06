@@ -11,6 +11,7 @@ import { MaterialFileUploadComponent } from './material-file-upload/material-fil
 import { FileUploadComponent } from './file-upload/file-upload.component';
 import { DeleteDialogComponent } from './dialog/delete-dialog/delete-dialog.component';
 import { FooFileUploadComponent } from './child/foo-file-upload/foo-file-upload.component';
+import { ListSheetComponent } from './bottom-sheet/list-sheet/list-sheet.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { FooFileUploadComponent } from './child/foo-file-upload/foo-file-upload.
     MaterialFileUploadComponent,
     FileUploadComponent,
     DeleteDialogComponent,
-    FooFileUploadComponent
+    FooFileUploadComponent,
+    ListSheetComponent
   ],
   entryComponents: [DeleteDialogComponent],
   imports: [
