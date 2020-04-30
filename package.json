@@ -23,7 +23,7 @@
     "@angular/router": "~8.2.11",
     "bootstrap": "^4.4.1",
     "core-js": "2.6.9",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "rxjs": "~6.4.0",
     "rxjs-compat": "^6.5.2",
     "tslib": "^1.10.0",
